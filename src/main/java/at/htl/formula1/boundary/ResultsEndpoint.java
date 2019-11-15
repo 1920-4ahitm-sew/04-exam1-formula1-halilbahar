@@ -80,13 +80,21 @@ public class ResultsEndpoint {
     @GET
     @Path("raceswon")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getWonRacesByTeam(@QueryParam("team") String team){
+    public Response getWonRacesByTeam(@QueryParam("team") String team) {
         List<Race> wonRaces = this.em
                 .createNamedQuery("Result.getWonRacesByTeam", Race.class)
                 .setParameter("TEAM", team)
                 .getResultList();
         return Response.ok(wonRaces).build();
     }
+
+    @GET
+    @Path("all")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllDriver() {
+        return Response.ok(this.em.createNamedQuery("Driver.getAllDrivers").getResultList()).build();
+    }
+
     // Ergänzen Sie Ihre eigenen Methoden ...
 
 }
