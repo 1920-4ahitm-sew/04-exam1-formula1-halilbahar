@@ -13,6 +13,10 @@ import javax.persistence.*;
         @NamedQuery(
                 name = "Driver.getByName",
                 query = "SELECT d FROM Driver d WHERE d.name = :NAME"
+        ),
+        @NamedQuery(
+                name = "Driver.getAllDrivers",
+                query = "SELECT d FROM Driver d"
         )
 })
 public class Driver {
