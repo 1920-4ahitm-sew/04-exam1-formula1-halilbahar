@@ -52,6 +52,22 @@ public class ResultsEndpoint {
         return jsonObject;
     }
 
+    @GET
+    @Path("winner/{country}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Driver getWinnerOfRace(@PathParam("country") String country) {
+        try {
+            Driver winner = this.em
+                    .createNamedQuery("Result.getDriverByCountry", Driver.class)
+                    .setParameter("COUNTRY", country)
+                    .getSingleResult();
+
+            return winner;
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
     /**
      * @param id des Rennens
      * @return
