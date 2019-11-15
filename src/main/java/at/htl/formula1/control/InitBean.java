@@ -5,6 +5,7 @@ import at.htl.formula1.entity.Driver;
 import at.htl.formula1.entity.Race;
 import at.htl.formula1.entity.Team;
 
+import javax.ejb.Local;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Initialized;
 import javax.enterprise.event.Observes;
@@ -13,7 +14,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -22,6 +26,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Stream;
 
+@Transactional
 @ApplicationScoped
 public class InitBean {
 
@@ -49,8 +54,22 @@ public class InitBean {
      * @param racesFileName
      */
     private void readRacesFromFile(String racesFileName) {
-
-
+        try {
+            InputStreamReader streamReader = new InputStreamReader(this.getClass().getResourceAsStream("/" + racesFileName));
+            BufferedReader reader = new BufferedReader(streamReader);
+            reader.readLine();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] singleRow = line.split(";");
+                long id = Long.parseLong(singleRow[0]);
+                String country = singleRow[1];
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+                LocalDate date = LocalDate.parse(singleRow[2], formatter);
+                this.em.persist(new Race(id, country, date));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
