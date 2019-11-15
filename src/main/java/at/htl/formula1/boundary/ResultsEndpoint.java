@@ -55,16 +55,16 @@ public class ResultsEndpoint {
     @GET
     @Path("winner/{country}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Driver getWinnerOfRace(@PathParam("country") String country) {
+    public Response getWinnerOfRace(@PathParam("country") String country) {
         try {
             Driver winner = this.em
                     .createNamedQuery("Result.getDriverByCountry", Driver.class)
                     .setParameter("COUNTRY", country)
                     .getSingleResult();
 
-            return winner;
+            return Response.ok(winner).build();
         } catch (NoResultException e) {
-            return null;
+            return Response.status(404).build();
         }
     }
 
