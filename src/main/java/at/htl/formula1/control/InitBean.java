@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.stream.Stream;
 
 @Transactional
@@ -80,7 +81,18 @@ public class InitBean {
      * @param teamFileName
      */
     private void readTeamsAndDriversFromFile(String teamFileName) {
-
+        try {
+            InputStreamReader streamReader = new InputStreamReader(this.getClass().getResourceAsStream("/" + teamFileName));
+            BufferedReader reader = new BufferedReader(streamReader);
+            reader.readLine();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] singleRow = line.split(";");
+                this.persistTeamAndDrivers(singleRow);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -93,10 +105,19 @@ public class InitBean {
      *
      * @param line String-Array mit den einzelnen Werten der csv-Datei
      */
-
     private void persistTeamAndDrivers(String[] line) {
-
+        List<Team> resultList = this.em
+                .createNamedQuery("team.getByName", Team.class)
+                .setParameter("TEAM", line[0])
+                .getResultList();
+        Team currentTeam;
+        if (resultList.size() != 1) {
+            currentTeam = new Team(line[0]);
+            this.em.persist(currentTeam);
+        } else {
+            currentTeam = resultList.get(0);
+        }
+        this.em.persist(new Driver(line[1], currentTeam));
+        this.em.persist(new Driver(line[2], currentTeam));
     }
-
-
 }
