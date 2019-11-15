@@ -9,6 +9,12 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "F1_TEAM")
+@NamedQueries({
+        @NamedQuery(
+                name = "team.getByName",
+                query = "SELECT t from Team t where t.name = :TEAM"
+        )
+})
 public class Team {
 
     @Id
