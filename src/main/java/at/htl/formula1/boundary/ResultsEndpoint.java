@@ -6,16 +6,13 @@ import at.htl.formula1.entity.Race;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-import javax.json.JsonReader;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
-
 
 @Path("results")
 public class ResultsEndpoint {
@@ -28,9 +25,7 @@ public class ResultsEndpoint {
      * @return JsonObject
      */
     @GET
-    public JsonObject getPointsSumOfDriver(
-            @QueryParam("name") String name
-    ) {
+    public JsonObject getPointsSumOfDriver(@QueryParam("name") String name) {
         if (name == null) {
             return null;
         }
@@ -68,15 +63,6 @@ public class ResultsEndpoint {
         }
     }
 
-    /**
-     * @param id des Rennens
-     * @return
-     */
-    public Response findWinnerOfRace(long id) {
-        return null;
-    }
-
-
     @GET
     @Path("raceswon")
     @Produces(MediaType.APPLICATION_JSON)
@@ -94,7 +80,4 @@ public class ResultsEndpoint {
     public Response getAllDriver() {
         return Response.ok(this.em.createNamedQuery("Driver.getAllDrivers").getResultList()).build();
     }
-
-    // Ergänzen Sie Ihre eigenen Methoden ...
-
 }
