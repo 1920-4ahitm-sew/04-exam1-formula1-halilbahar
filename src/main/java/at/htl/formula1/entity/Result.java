@@ -10,10 +10,14 @@ import javax.persistence.*;
 @Entity
 @Table(name = "F1_RESULT")
 @NamedQueries({
-    @NamedQuery(
-            name = "Result.getDriverPointSum",
-            query = "SELECT sum(r.points) FROM Result r WHERE r.driver.name = :NAME"
-    )
+        @NamedQuery(
+                name = "Result.getDriverPointSum",
+                query = "SELECT sum(r.points) FROM Result r WHERE r.driver.name = :NAME"
+        ),
+        @NamedQuery(
+                name = "Result.getDriverByCountry",
+                query = "SELECT r.driver from Result r WHERE r.position = 1 AND r.race.country = :COUNTRY"
+        )
 })
 public class Result {
 
