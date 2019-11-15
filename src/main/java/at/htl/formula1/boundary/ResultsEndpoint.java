@@ -67,6 +67,10 @@ public class ResultsEndpoint {
     @Path("raceswon")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getWonRacesByTeam(@QueryParam("team") String team) {
+        if (team == null) {
+            return Response.status(400).build();
+        }
+
         List<Race> wonRaces = this.em
                 .createNamedQuery("Result.getWonRacesByTeam", Race.class)
                 .setParameter("TEAM", team)
